@@ -11,6 +11,9 @@ const pool = new Pool({
   database: process.env.RDS_DB_NAME,
   password: process.env.RDS_PASSWORD,
   port: process.env.RDS_PORT,
+  ssl: {
+    rejectUnauthorized: false,
+  }
 });
 
 // Simple route to test database connection
@@ -30,7 +33,11 @@ app.get("/users", async (req, res) => {
     res.json(rows);
   } catch (err) {
     console.error(err.message);
-    res.status(500).send(`Server Error: ${err.message} ${err.stack} ${err.code} ${process.env.RDS_DB_NAME} ${process.env.RDS_HOSTNAME} ${process.env.RDS_PASSWORD} ${process.env.RDS_PORT} ${process.env.RDS_USERNAME}`);
+    res
+      .status(500)
+      .send(
+        `Server Error: ${err.message} ${err.stack} ${err.code} ${process.env.RDS_DB_NAME} ${process.env.RDS_HOSTNAME} ${process.env.RDS_PASSWORD} ${process.env.RDS_PORT} ${process.env.RDS_USERNAME}`
+      );
   }
 });
 
