@@ -19,6 +19,15 @@ const pool = new Pool({
 // Simple route to test database connection
 app.get("/users", async (req, res) => {
   try {
+    // Create the users table if it doesn't exist
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS users (
+        id SERIAL PRIMARY KEY,
+        name VARCHAR(100) NOT NULL,
+        email VARCHAR(100) UNIQUE NOT NULL
+      )
+    `);
+
     // Add some users to the database
     await pool.query(`
       INSERT INTO users (name, email) VALUES
